@@ -45,6 +45,7 @@ python scripts/05_figures/localize_paper_figures_ja_20260717.py
 ```bash
 python scripts/01_solvers/pcmv_domv_solver_20260713.py
 python scripts/03_rolling/recompute_d0_rolling.py
+python scripts/04_sensitivity/numerical_diagnostics_20260718.py
 python scripts/01_solvers/dtcmv_mvs_solver_20260713.py
 python scripts/02_calibration/run_mvs_refined_calibration.py
 ```
@@ -70,6 +71,8 @@ python scripts/02_calibration/run_mvs_refined_calibration.py
 ## 再現性上の注意
 
 - `monthly_D0_policy_arrays.npz`は、40年・月次（480期）の基準計算から得た方策・分布配列です。
+- `numerical_diagnostics_20260718.py`は、正規化前質量、上下端超過量、後退・前進モーメント整合性、およびdTCMVの入れ子上端格子感応度を再計算します。
+- 基準格子 `x_max=300` のdTCMVは右裾統計に軽微な上端感応度があるため、`results/xmax_sensitivity_dtcmv_D0_N480.csv` と広領域共通平均再較正結果も参照してください。
 - MVSの正の歪度係数に関する結果は、非凹性と離散化依存性を伴う探索的結果です。
 - 付属配列からの作図は高速ですが、ソルバーからの完全再計算にはCPU時間とメモリを要します。
 - 論文中の数値は、対応するCSV/NPZを正本として照合してください。
