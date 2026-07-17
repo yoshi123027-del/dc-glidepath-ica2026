@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+pc_d0/
+sensitivity_workers/
+mvs_workers/
+
