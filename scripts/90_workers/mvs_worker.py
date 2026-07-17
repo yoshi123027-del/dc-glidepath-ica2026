@@ -3,6 +3,9 @@ import sys
 from pathlib import Path
 import numpy as np
 import pandas as pd
+
+SOLVER_DIR = Path(__file__).resolve().parents[1] / "01_solvers"
+sys.path.insert(0, str(SOLVER_DIR))
 import dtcmv_mvs_solver_20260713 as m
 
 kind=sys.argv[1]; eta=float(sys.argv[2]); gamma=float(sys.argv[3]); out=Path(sys.argv[4]); out.mkdir(parents=True,exist_ok=True)

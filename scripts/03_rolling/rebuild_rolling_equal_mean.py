@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from numpy.polynomial.hermite import hermgauss
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 RES=ROOT/'results'; FIG=ROOT/'figs'
 arr=np.load(RES/'monthly_D0_policy_arrays.npz')
 times=arr['times']; dt=float(times[1]-times[0]); N=len(times)-1

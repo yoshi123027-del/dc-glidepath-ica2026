@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from numba import njit
 from numpy.polynomial.hermite import hermgauss
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 FIG = ROOT / "figs"
 RES = ROOT / "results"
 FIG.mkdir(exist_ok=True)

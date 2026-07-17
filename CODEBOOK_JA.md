@@ -4,32 +4,32 @@
 
 | ファイル | 役割 |
 | --- | --- |
-| `pcmv_domv_solver_20260713.py` | PCMV・DOMVの制約付き二次損失問題を解く中核ソルバー |
-| `recompute_d0_rolling.py` | $D_T=0$基準ケースのcTCMV・dTCMV・CP、終端分布、ローリング評価を再計算 |
-| `dtcmv_mvs_solver_20260713.py` | dTCMV--MVSの一次・二次・三次モーメント後退計算 |
-| `run_mvs_refined_calibration.py` | MVS係数の精緻較正を実行 |
+| `scripts/01_solvers/pcmv_domv_solver_20260713.py` | PCMV・DOMVの制約付き二次損失問題を解く中核ソルバー |
+| `scripts/03_rolling/recompute_d0_rolling.py` | $D_T=0$基準ケースのcTCMV・dTCMV・CP、終端分布、ローリング評価を再計算 |
+| `scripts/01_solvers/dtcmv_mvs_solver_20260713.py` | dTCMV--MVSの一次・二次・三次モーメント後退計算 |
+| `scripts/02_calibration/run_mvs_refined_calibration.py` | MVS係数の精緻較正を実行 |
 
 ## 診断・感応度分析
 
 | ファイル | 役割 |
 | --- | --- |
-| `detailed_dtcmv_rolling_overlay_20260713.py` | dTCMVの残高分位点別ローリング評価 |
-| `low_balance_refined_sensitivity_20260714.py` | 低残高領域を中心とした局所精緻化・感応度分析 |
-| `rebuild_baseline_sensitivity.py` | 基準ケースと感応度結果の再集計 |
-| `rebuild_all_corrected_glide_outputs.py` | 修正後のグライドパス・分布出力を一括再構築 |
-| `rebuild_rolling_equal_mean.py` | 共通平均較正のローリング結果を再構築 |
-| `equal_mean_calibration_20260713.py` | 共通平均比較用の較正値を整理 |
+| `scripts/03_rolling/detailed_dtcmv_rolling_overlay_20260713.py` | dTCMVの残高分位点別ローリング評価 |
+| `scripts/04_sensitivity/low_balance_refined_sensitivity_20260714.py` | 低残高領域を中心とした局所精緻化・感応度分析 |
+| `scripts/04_sensitivity/rebuild_baseline_sensitivity.py` | 基準ケースと感応度結果の再集計 |
+| `scripts/05_figures/rebuild_all_corrected_glide_outputs.py` | 修正後のグライドパス・分布出力を一括再構築 |
+| `scripts/03_rolling/rebuild_rolling_equal_mean.py` | 共通平均較正のローリング結果を再構築 |
+| `scripts/02_calibration/equal_mean_calibration_20260713.py` | 共通平均比較用の較正値を整理 |
 
 ## 作図
 
 | ファイル | 役割 |
 | --- | --- |
-| `localize_paper_figures_ja_20260717.py` | 付属NPZ/CSVから論文図を日本語で再生成 |
-| `make_common_state_rolling_figure_20260713.py` | 共通状態ローリング比較図を生成 |
+| `scripts/05_figures/localize_paper_figures_ja_20260717.py` | 付属NPZ/CSVから論文図を日本語で再生成 |
+| `scripts/03_rolling/make_common_state_rolling_figure_20260713.py` | 共通状態ローリング比較図を生成 |
 
 ## 補助プロセス
 
-`mvs_worker.py`と`sensitivity_worker.py`は、並列または分割実行時のワーカーです。単独での実行よりも、呼出元スクリプトから利用することを想定しています。
+`scripts/90_workers/mvs_worker.py`と`scripts/90_workers/sensitivity_worker.py`は、並列または分割実行時のワーカーです。単独での実行よりも、呼出元スクリプトから利用することを想定しています。
 
 ## 主要データ
 

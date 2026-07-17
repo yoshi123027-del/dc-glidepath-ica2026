@@ -4,6 +4,9 @@ from dataclasses import replace
 from pathlib import Path
 import numpy as np
 import pandas as pd
+
+SENSITIVITY_DIR = Path(__file__).resolve().parents[1] / "04_sensitivity"
+sys.path.insert(0, str(SENSITIVITY_DIR))
 import low_balance_refined_sensitivity_20260714 as m
 
 key=sys.argv[1]
