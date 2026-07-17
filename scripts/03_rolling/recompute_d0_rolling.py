@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from numba import njit
 from numpy.polynomial.hermite import hermgauss
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 FIG = ROOT / 'figs'
 RES = ROOT / 'results'
 FIG.mkdir(exist_ok=True)
@@ -22,7 +22,7 @@ RES.mkdir(exist_ok=True)
 # ------------------------------------------------------------
 # Load PCMV/DOMV solver
 # ------------------------------------------------------------
-pc_path = ROOT / 'pcmv_domv_solver_20260713.py'
+pc_path = ROOT / 'scripts' / '01_solvers' / 'pcmv_domv_solver_20260713.py'
 spec = importlib.util.spec_from_file_location('pcmod', pc_path)
 pcmod = importlib.util.module_from_spec(spec)
 sys.modules['pcmod'] = pcmod

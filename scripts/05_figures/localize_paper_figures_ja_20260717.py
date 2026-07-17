@@ -13,7 +13,7 @@ import pandas as pd
 from PIL import Image
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 FIG = ROOT / "figs"
 RES = ROOT / "results"
 

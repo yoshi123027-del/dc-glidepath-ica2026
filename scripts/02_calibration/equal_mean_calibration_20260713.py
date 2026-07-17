@@ -8,7 +8,7 @@ means from the saved monthly baseline output.
 from pathlib import Path
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 RESULTS = ROOT / "results"
 TARGET_MEAN = 84.7770864
 CALIBRATION = {

@@ -1,5 +1,11 @@
 from dataclasses import replace
+from pathlib import Path
+import sys
+
 import pandas as pd
+
+SOLVER_DIR = Path(__file__).resolve().parents[1] / "01_solvers"
+sys.path.insert(0, str(SOLVER_DIR))
 import dtcmv_mvs_solver_20260713 as m
 
 base=replace(m.Config(), n_x=251, n_controls=41, n_gh=7)

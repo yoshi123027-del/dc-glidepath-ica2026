@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 CSV = ROOT / 'results' / 'rolling_quantile_detail_D0_N480.csv'
 OUT = ROOT / 'figs' / 'fig_common_state_rolling_selected_D0_N480.png'
 TABLE = ROOT / 'results' / 'selected_common_state_rolling_D0_N480.csv'

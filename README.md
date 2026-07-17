@@ -37,25 +37,35 @@ pip install -r requirements.txt
 完全な月次再計算は計算負荷が高いため、まず同梱済み配列から図を再生成する方法を推奨します。
 
 ```bash
-python localize_paper_figures_ja_20260717.py
+python scripts/05_figures/localize_paper_figures_ja_20260717.py
 ```
 
 主要な再計算は次の順序です。
 
 ```bash
-python pcmv_domv_solver_20260713.py
-python recompute_d0_rolling.py
-python dtcmv_mvs_solver_20260713.py
-python run_mvs_refined_calibration.py
+python scripts/01_solvers/pcmv_domv_solver_20260713.py
+python scripts/03_rolling/recompute_d0_rolling.py
+python scripts/01_solvers/dtcmv_mvs_solver_20260713.py
+python scripts/02_calibration/run_mvs_refined_calibration.py
 ```
 
-各スクリプトの役割は [CODEBOOK_JA.md](CODEBOOK_JA.md) を参照してください。
+番号は作業の大まかな流れを表します。全スクリプトの役割と実行区分は [scripts/README.md](scripts/README.md) および [CODEBOOK_JA.md](CODEBOOK_JA.md) を参照してください。
 
 ## ディレクトリ
 
 - `results/`: 論文の主要表、較正値、ローリング評価および方策配列
 - `figs/`: 論文掲載図の日本語版と再生成に必要な原図
-- ルート直下の `*.py`: ソルバー、診断、感応度分析および作図スクリプト
+- `supplementary/figures/`: 本文未掲載の補足図と各図の解説
+- `scripts/01_solvers/`: PCMV・DOMV・dTCMV--MVSの中核ソルバー
+- `scripts/02_calibration/`: 共通平均・MVS係数の較正
+- `scripts/03_rolling/`: ローリング条件付き評価と関連図
+- `scripts/04_sensitivity/`: 感応度分析と再集計
+- `scripts/05_figures/`: 論文図の再生成・日本語化
+- `scripts/90_workers/`: 分割実行用の補助ワーカー（通常は直接実行しません）
+
+## 本文未掲載の補足図
+
+感応度分析、制約診断、ローリング評価およびMVS詳細図を、[補足図ページ](supplementary/figures/README.md) にまとめています。各図の直下に日本語の説明を掲載しています。
 
 ## 再現性上の注意
 

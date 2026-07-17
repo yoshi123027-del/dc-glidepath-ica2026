@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from numpy.polynomial.hermite import hermgauss
 from scipy.ndimage import gaussian_filter1d
 
-ROOT=Path(__file__).resolve().parent
+ROOT=Path(__file__).resolve().parents[2]
 FIG=ROOT/'figs'; RES=ROOT/'results'; SW=ROOT/'sensitivity_workers'; MW=ROOT/'mvs_workers'
 FIG.mkdir(exist_ok=True); RES.mkdir(exist_ok=True)
 X0=1/12; T=40.0; R=.015; MU=.055; BETA=MU-R; SIGMA=.18; C=1.0
@@ -149,5 +149,32 @@ fig.tight_layout(); fig.savefig(FIG/'fig_tcmv_time_grid_glide_comparison_D0.png'
 try: (FIG/'_dummy.png').unlink()
 except FileNotFoundError: pass
 
+# ---------- MVS worker aggregation ----------
+fixed_eta=[0.,.5,1.,2.]; cal_eta=[0.,1.,2.,4.,8.]
+def load_mvs(kind,eta):
+    with np.load(MW/f'{kind}_{eta:g}.npz') as z: return {k:z[k].copy() for k in z.files}
+fixed=[load_mvs('fixed',e) for e in fixed_eta]; cal=[load_mvs('cal',e) for e in cal_eta]
+fixed_df=pd.concat([pd.read_csv(MW/f'fixed_{e:g}.csv') for e in fixed_eta],ignore_index=True)
+cal_df=pd.concat([pd.read_csv(MW/f'cal_{e:g}.csv') for e in cal_eta],ignore_index=True)
+fixed_df.to_csv(RES/'dtcmv_mvs_fixed_gamma_summary.csv',index=False); cal_df.to_csv(RES/'dtcmv_mvs_equal_mean_summary.csv',index=False)
+mt=fixed[0]['decision_times']; mx=fixed[0]['x_grid']
+np.savez_compressed(RES/'dtcmv_mvs_arrays.npz',times=np.linspace(0,T,len(mt)+1),decision_times=mt,x_grid=mx,fixed_eta_grid=np.array(fixed_eta),calibrated_eta_grid=np.array(cal_eta),gamma_calibrated=cal_df['gamma0'].to_numpy(),glide_fixed=np.stack([r['glide'] for r in fixed]),glide_calibrated=np.stack([r['glide'] for r in cal]),pmf_calibrated=np.stack([r['pmf'] for r in cal]),policy_calibrated=np.stack([r['policy'] for r in cal]))
+plot_glides([(fr'$\eta_0={e:.2f}$',r['glide'],{}) for e,r in zip(fixed_eta,fixed)],mt,FIG/'fig_dtcmv_mvs_fixed_gamma_glidepaths.png',ylabel='Mass-weighted risky proportion',ncol=2,figsize=(9,5.4))
+plot_glides([(fr'$\eta_0={e:.2f}$, $\gamma_0={g:.2f}$',r['glide'],{}) for e,g,r in zip(cal_eta,cal_df['gamma0'],cal)],mt,FIG/'fig_dtcmv_mvs_equal_mean_glidepaths.png',ylabel='Mass-weighted risky proportion',ncol=2,figsize=(9,5.4))
+fig,ax=plt.subplots(figsize=(9,5.4))
+for e,r in zip(cal_eta,cal): ax.plot(r['x_grid'],np.cumsum(r['pmf'][-1]/r['pmf'][-1].sum()),label=fr'$\eta_0={e:.2f}$')
+ax.set_xlabel('Terminal DC wealth'); ax.set_ylabel('CDF'); ax.set_xlim(0,200); ax.set_ylim(0,1); ax.grid(alpha=.25); ax.legend(ncol=2)
+fig.tight_layout(); fig.savefig(FIG/'fig_dtcmv_mvs_equal_mean_cdf.png',dpi=180); plt.close(fig)
+fig,ax=plt.subplots(figsize=(7.2,5.4)); ax.plot(cal_df['cvar05'],cal_df['ucvar95'],marker='o')
+for _,r in cal_df.iterrows(): ax.annotate(fr'$\eta_0={r.eta0:.2f}$',(r.cvar05,r.ucvar95),xytext=(5,4),textcoords='offset points')
+ax.set_xlabel('Lower-tail CVaR (5%)'); ax.set_ylabel('Upper-tail conditional mean (95%)'); ax.grid(alpha=.25)
+fig.tight_layout(); fig.savefig(FIG/'fig_dtcmv_mvs_tail_frontier.png',dpi=180); plt.close(fig)
 
-print('baseline and sensitivity rebuilt')
+print('MONTHLY')
+print(pd.DataFrame(rows).to_string(index=False))
+print('\nSENSITIVITY')
+print(sdf[['scenario','strategy','mean','stdev','q05','q95','cvar05','mean_glide','initial_glide','last_decision_glide']].to_string(index=False))
+print('\nMVS FIXED')
+print(fixed_df[['eta0','gamma0','mean','stdev','skewness','q05','q95','cvar05','ucvar95','mean_abs_glide']].to_string(index=False))
+print('\nMVS CAL')
+print(cal_df[['eta0','gamma0','mean','stdev','skewness','q05','q95','cvar05','ucvar95','mean_abs_glide']].to_string(index=False))
