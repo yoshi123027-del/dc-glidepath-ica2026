@@ -39,6 +39,7 @@ python scripts/05_figures/localize_paper_figures_ja_20260717.py
 | --- | --- |
 | `low_balance_refined_sensitivity_20260714.py` | 低残高領域を精緻化した感応度分析 |
 | `rebuild_baseline_sensitivity.py` | 基準ケースと感応度結果を再集計 |
+| `numerical_diagnostics_20260718.py` | モーメント整合性、正規化前質量、境界超過量、dTCMV上端格子感応度を再計算 |
 
 ## 05_figures：出力・作図
 
@@ -56,6 +57,7 @@ python scripts/05_figures/localize_paper_figures_ja_20260717.py
 ```bash
 python scripts/01_solvers/pcmv_domv_solver_20260713.py
 python scripts/03_rolling/recompute_d0_rolling.py
+python scripts/04_sensitivity/numerical_diagnostics_20260718.py
 python scripts/01_solvers/dtcmv_mvs_solver_20260713.py
 python scripts/02_calibration/run_mvs_refined_calibration.py
 ```
