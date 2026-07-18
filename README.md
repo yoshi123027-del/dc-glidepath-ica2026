@@ -30,24 +30,25 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-日本語図を再生成する場合は、Noto Sans CJK JPをOSへインストールするか、`fonts/NotoSansCJKjp-Regular.otf`へ配置してください。
+日本語図を再生成する場合は、Noto Sans CJK JPをOSへインストールか、`fonts/NotoSansCJKjp-Regular.otf`へ配置してください。
 
 ## 四つのMV解概念の検証（付録A.3）
 
-PCMVだけでなく、DOMV、cTCMV、dTCMVも自動回帰試験の対象としています。
+van Staden, Dang and Forsyth (2021) Table 5.1にはPCMV、DOMV、cTCMV、dTCMVの数値例が掲載されているため、四解概念すべてを外部再現の対象とします。本稿固有の制約付き月次実装については、独立前進分布、確率質量、境界量および入れ子格子を別途監査します。
 
 ```bash
+python validation/external_validation_vanstaden2021_all_mv.py
 python validation/run_all_validations.py
 ```
 
-検証結果は `results/validation/` に保存されます。現行参照版では、PCMVは外部・内部を合わせて39/39項目、DOMVは7/7項目、cTCMVは7/7項目、dTCMVは15/15項目を通過しています。
+検証結果は `results/validation/` に保存されます。現行参照版では次の全項目が通過しています。
 
-- PCMV：van Staden, Dang and Forsyth (2021) Table 5.1の32項目を解析解・固定seed Monte Carloで再現し、基準ケースの後退・前進整合性も確認します。
-- DOMV：保存済み後退方策から独立に前進分布を再構成し、一次・二次モーメント、質量保存、境界量を判定します。
-- cTCMV：均衡方策から独立に前進分布を再構成し、同じ診断を行います。
-- dTCMV：基準格子のモーメント整合性に加え、`x_max=900` と `x_max=2100` の入れ子上端格子で尾部統計と平均グライドパスの安定性を確認します。
+- PCMV：外部58項目 + 内部7項目 = 65/65
+- DOMV：外部58項目 + 内部7項目 = 65/65
+- cTCMV：外部58項目 + 内部7項目 = 65/65
+- dTCMV：外部52項目 + 内部15項目 = 67/67
 
-DOMV、cTCMV、dTCMVについて、本稿と同一条件の公表数値表は存在しないため、外部再現を装わず、独立前進伝播・質量・境界・格子安定性による検証として明示しています。詳しくは [validation/README.md](validation/README.md) を参照してください。
+PCMVはreflected lognormal閉形式、DOMVとcTCMVは正規終端分布の閉形式からTable 5.1を再計算します。dTCMVは未公表の時変係数経路を再現したとはせず、公表平均・標準偏差から対数正規終端分布を同定して残りの分布指標を再計算する、分布レベルの外部検証としています。詳細は [validation/README.md](validation/README.md) を参照してください。
 
 ## 主な実行順序
 
