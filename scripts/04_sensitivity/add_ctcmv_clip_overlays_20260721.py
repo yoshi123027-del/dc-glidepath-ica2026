@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import sys
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
 
@@ -33,6 +34,7 @@ def load_base_module():
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot import {BASE_SCRIPT}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
