@@ -71,11 +71,25 @@ python scripts/02_calibration/run_mvs_refined_calibration.py
 
 番号は作業の大まかな流れを表します。全スクリプトの役割と実行区分は [scripts/README.md](scripts/README.md) および [CODEBOOK_JA.md](CODEBOOK_JA.md) を参照してください。
 
+## 最終稿で追加した診断
+
+Table 10のdTCMV U字型成因分解と、付録A.4の理論的射影領域・直接探索領域の一致診断は、`diagnostics/`で再計算できます。
+
+```bash
+python diagnostics/additional_diagnostics.py
+python diagnostics/unconstrained_dtcmv_theta.py
+python diagnostics/recompute_crosscheck.py
+python diagnostics/pcmv_crosscheck.py
+```
+
+実行順序と出力CSVの説明は [diagnostics/README.md](diagnostics/README.md) を参照してください。
+
 ## ディレクトリ
 
 - `results/`: 論文の主要表、較正値、ローリング評価および方策配列
 - `results/validation/`: 四つのMV解概念の自動判定結果
 - `validation/`: 付録A.3に対応する外部・内部妥当性検証
+- `diagnostics/`: Table 10のU字型分解および付録A.4の自由境界クロスチェック
 - `figs/`: 論文掲載図の日本語版と再生成に必要な原図
 - `supplementary/figures/`: 本文未掲載の補足図と各図の解説
 - `scripts/01_solvers/`: PCMV・DOMV・dTCMV--MVSの中核ソルバー
