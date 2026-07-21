@@ -1,0 +1,31 @@
+name: Temporary paper figure export
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect paper figures
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p exported_figs
+          cp figs/fig_all_strategies_terminal_cdf_D0_N480.png exported_figs/
+          cp figs/fig_all_strategies_glidepaths_D0_N480.png exported_figs/
+          cp figs/policy_heatmap_cTCMV_N480_reachable.png exported_figs/
+          cp figs/policy_heatmap_dTCMV_N480_reachable.png exported_figs/
+          cp figs/fig_strict_vs_clipped_glidepaths_by_strategy_N480.png exported_figs/
+          cp figs/fig_common_state_rolling_selected_D0_N480.png exported_figs/
+      - name: Upload figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-figures
+          path: exported_figs
+          if-no-files-found: error
