@@ -63,6 +63,7 @@ python scripts/05_figures/localize_paper_figures_ja_20260717.py
 ```bash
 python scripts/01_solvers/pcmv_domv_solver_20260713.py
 python scripts/03_rolling/recompute_d0_rolling.py
+python scripts/04_sensitivity/add_all_clip_overlays_20260721.py --output-dir d0_sensitivity_outputs
 python scripts/04_sensitivity/numerical_diagnostics_20260718.py
 python validation/run_all_validations.py
 python scripts/01_solvers/dtcmv_mvs_solver_20260713.py
@@ -70,6 +71,20 @@ python scripts/02_calibration/run_mvs_refined_calibration.py
 ```
 
 番号は作業の大まかな流れを表します。全スクリプトの役割と実行区分は [scripts/README.md](scripts/README.md) および [CODEBOOK_JA.md](CODEBOOK_JA.md) を参照してください。
+
+## 四解概念の厳密制約解とクリップ近似
+
+年80分割の感応度分析では、PCMV、DOMV、cTCMV、dTCMVの全解概念について、制約付き問題を直接解いたフィードバックと、対応する無制約解析解を事後的に `0 <= pi <= x` へ射影したクリップ近似を比較します。
+
+- 実線：厳密制約フィードバック
+- 同色の点線：無制約解のクリップ近似
+- 両方策は、それぞれが生成する残高分布の下で独立に前進伝播
+
+![期待収益率感応度における全解概念の厳密解とクリップ解](supplementary/figures/fig_mu_sensitivity_glidepaths_N80.svg)
+
+PCMVは固定ターゲット型の無制約解、DOMVは各時点再最適化型の無制約解、cTCMVは定数リスク回避型の解析解、dTCMVはVolterra方程式から得る時変係数を用いています。計算式と実装は [`add_all_clip_overlays_20260721.py`](scripts/04_sensitivity/add_all_clip_overlays_20260721.py)、全5図は [補足図ページ](supplementary/figures/README.md)、差分集計は [`all_strategies_strict_vs_clip_sensitivity_summary.csv`](results/sensitivity/all_strategies_strict_vs_clip_sensitivity_summary.csv) を参照してください。
+
+比較の結果、基準パラメータで差が小さい解概念があっても、パラメータ変更後に同様に近いとは限りません。特にPCMVおよびdTCMVでは、シナリオによって直接制約解とクリップ近似の差が大きくなります。
 
 ## 最終稿で追加した診断
 
@@ -88,6 +103,7 @@ python diagnostics/pcmv_crosscheck.py
 
 - `results/`: 論文の主要表、較正値、ローリング評価および方策配列
 - `results/validation/`: 四つのMV解概念の自動判定結果
+- `results/sensitivity/`: 全解概念の厳密解・クリップ近似の感応度差分
 - `validation/`: 付録A.3に対応する外部・内部妥当性検証
 - `diagnostics/`: Table 10のU字型分解および付録A.4の自由境界クロスチェック
 - `figs/`: 論文掲載図の日本語版と再生成に必要な原図
@@ -106,6 +122,7 @@ python diagnostics/pcmv_crosscheck.py
 ## 再現性上の注意
 
 - `monthly_D0_policy_arrays.npz`は、40年・月次（480期）の基準計算から得た方策・分布配列です。
+- 感応度図は年80分割のスクリーニング計算です。実線と点線は同一状態分布上の単純比較ではなく、各方策の自己生成分布に基づくグライドパスです。
 - `numerical_diagnostics_20260718.py`は、正規化前質量、上下端超過量、後退・前進モーメント整合性、およびdTCMV上端格子感応度を再計算します。
 - 基準格子 `x_max=300` のdTCMVは右裾統計に上端感応度があるため、尾部の妥当性は `x_max=900` 以上の入れ子格子で判定します。
 - MVSの正の歪度係数に関する結果は、非凹性と離散化依存性を伴う探索的結果です。
