@@ -1,0 +1,25 @@
+name: Temporary export dTCMVS figure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-export-dtcmvs-figure.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect figure
+        run: |
+          mkdir -p export
+          cp supplementary/figures/fig_dtcmv_mvs_fixed_gamma_glidepaths.png export/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dtcmvs-fixed-gamma-figure
+          path: export/fig_dtcmv_mvs_fixed_gamma_glidepaths.png
+          if-no-files-found: error
