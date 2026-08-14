@@ -68,7 +68,7 @@ python scripts/04_sensitivity/add_all_clip_overlays_20260721.py --output-dir d0_
 | --- | --- |
 | `rebuild_all_corrected_glide_outputs.py` | 修正済みグライドパス・分布出力を一括再構築 |
 | `localize_paper_figures_ja_20260717.py` | 論文図を日本語で再生成 |
-| `make_all_strategies_terminal_distribution.py` | 全戦略の終端密度と5%–95%分位区間・中央値・平均値を英語で生成 |
+| `make_all_strategies_terminal_distribution.py` | 全戦略の終端密度と5%–95%分位区間・中央値・平均値を英語で生成。`--exclude-cp`でプレゼン用のCP除外版も生成 |
 | `make_dtcmv_mvs_fixed_gamma_terminal_distribution.py` | Figure 6の固定係数グライドパスに対応する終端密度・分位区間を英語で生成 |
 
 ## 90_workers：補助ワーカー

@@ -15,6 +15,7 @@ ARRAYS = ROOT / "results" / "monthly_D0_policy_arrays.npz"
 SUMMARY = ROOT / "results" / "monthly_baseline_D0_summary.csv"
 DEFAULT_OUTPUT_DIR = ROOT / "supplementary" / "figures"
 STEM = "fig_all_strategies_terminal_density_D0_N480"
+STEM_WITHOUT_CP = "fig_four_strategies_terminal_density_D0_N480"
 
 FIGURE_WIDTH_INCHES = 9.2
 FIGURE_HEIGHT_INCHES = 5.6
@@ -97,16 +98,17 @@ def load_inputs() -> tuple[dict[str, tuple[np.ndarray, np.ndarray]], pd.DataFram
     return distributions, summary
 
 
-def make_figure(output_dir: Path) -> list[Path]:
+def make_figure(output_dir: Path, exclude_cp: bool = False) -> list[Path]:
     distributions, summary = load_inputs()
     output_dir.mkdir(parents=True, exist_ok=True)
+    active_series = tuple(item for item in SERIES if not (exclude_cp and item[0] == "CP"))
 
     figure = plt.figure(figsize=(FIGURE_WIDTH_INCHES, FIGURE_HEIGHT_INCHES))
     layout = figure.add_gridspec(2, 1, height_ratios=[3.2, 1.25], hspace=0.12)
     density_axis = figure.add_subplot(layout[0])
     interval_axis = figure.add_subplot(layout[1], sharex=density_axis)
 
-    for strategy, _, _ in SERIES:
+    for strategy, _, _ in active_series:
         values, probabilities = distributions[strategy]
         probabilities = probabilities / probabilities.sum()
         mass = deposit_uniform(values, probabilities)
@@ -120,9 +122,9 @@ def make_figure(output_dir: Path) -> list[Path]:
     density_axis.set_ylim(bottom=0.0)
     density_axis.tick_params(axis="x", labelbottom=False)
     density_axis.grid(alpha=0.25)
-    density_axis.legend(ncol=3, loc="upper right")
+    density_axis.legend(ncol=2 if exclude_cp else 3, loc="upper right")
 
-    strategies = [item[0] for item in SERIES]
+    strategies = [item[0] for item in active_series]
     row_positions = np.arange(len(strategies))[::-1]
     for strategy, row_position in zip(strategies, row_positions):
         row = summary.loc[strategy]
@@ -208,7 +210,8 @@ def make_figure(output_dir: Path) -> list[Path]:
     )
     figure.subplots_adjust(left=0.11, right=0.98, bottom=0.13, top=0.98, hspace=0.08)
 
-    outputs = [output_dir / f"{STEM}.png", output_dir / f"{STEM}.svg"]
+    output_stem = STEM_WITHOUT_CP if exclude_cp else STEM
+    outputs = [output_dir / f"{output_stem}.png", output_dir / f"{output_stem}.svg"]
     figure.savefig(outputs[0], dpi=PNG_DPI, facecolor="white")
     figure.savefig(outputs[1], facecolor="white")
     plt.close(figure)
@@ -235,9 +238,14 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_OUTPUT_DIR,
         help="Directory for PNG and SVG output (default: supplementary/figures).",
     )
+    parser.add_argument(
+        "--exclude-cp",
+        action="store_true",
+        help="Create a presentation version containing PCMV, DOMV, cTCMV, and dTCMV only.",
+    )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     arguments = parse_args()
-    make_figure(arguments.output_dir.resolve())
+    make_figure(arguments.output_dir.resolve(), exclude_cp=arguments.exclude_cp)
