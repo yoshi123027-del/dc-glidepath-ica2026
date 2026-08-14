@@ -21,8 +21,9 @@ SUMMARY = ROOT / "results" / "dtcmv_mvs_fixed_gamma_summary.csv"
 DEFAULT_OUTPUT_DIR = ROOT / "supplementary" / "figures"
 STEM = "fig_dtcmv_mvs_fixed_gamma_terminal_distribution"
 
-FIGURE_WIDTH_CM = 13.0
-FIGURE_HEIGHT_CM = 7.0
+FIGURE_WIDTH_INCHES = 9.0
+FIGURE_HEIGHT_INCHES = 5.4
+PNG_DPI = 180
 ETA_GRID = np.array([0.0, 0.5, 1.0, 2.0])
 COLORS = {
     0.0: "#1F77B4",
@@ -109,28 +110,12 @@ def make_figure(output_dir: Path) -> list[Path]:
         densities.append(density)
         bandwidths.append(bandwidth)
 
-    plt.rcParams.update(
-        {
-            "font.family": "DejaVu Sans",
-            "font.size": 6.8,
-            "axes.titlesize": 7.6,
-            "axes.labelsize": 7.2,
-            "xtick.labelsize": 6.2,
-            "ytick.labelsize": 6.2,
-            "legend.fontsize": 6.0,
-            "axes.linewidth": 0.65,
-        }
-    )
-    figure = plt.figure(figsize=(FIGURE_WIDTH_CM / 2.54, FIGURE_HEIGHT_CM / 2.54))
+    figure = plt.figure(figsize=(FIGURE_WIDTH_INCHES, FIGURE_HEIGHT_INCHES))
     grid = figure.add_gridspec(
         2,
         1,
-        height_ratios=[3.2, 1.3],
-        left=0.12,
-        right=0.985,
-        bottom=0.18,
-        top=0.72,
-        hspace=0.40,
+        height_ratios=[3.2, 1.25],
+        hspace=0.12,
     )
     density_axis = figure.add_subplot(grid[0])
     interval_axis = figure.add_subplot(grid[1], sharex=density_axis)
@@ -139,26 +124,20 @@ def make_figure(output_dir: Path) -> list[Path]:
     curve_labels: list[str] = []
     for index, eta0 in enumerate(ETA_GRID):
         color = COLORS[float(eta0)]
-        line_width = 1.65 if eta0 == 0.0 else 1.4
         handle, = density_axis.plot(
             density_grid,
             densities[index],
             color=color,
-            linewidth=line_width,
-            solid_capstyle="round",
         )
         curve_handles.append(handle)
-        model = "MV" if eta0 == 0.0 else "MVS"
-        curve_labels.append(rf"{model}  ($\eta_0={eta0:g}$)")
+        curve_labels.append(rf"$\eta_0={eta0:.2f}$")
 
-    density_axis.set_title("A. Terminal retirement-wealth density", loc="left", pad=4.5, fontweight="bold")
-    density_axis.set_ylabel("Density")
+    density_axis.set_ylabel("Smoothed density")
     density_axis.set_xlim(0.0, 260.0)
     density_axis.set_ylim(bottom=0.0)
     density_axis.tick_params(axis="x", labelbottom=False)
-    density_axis.grid(axis="y", color="#D9DEE7", linewidth=0.55)
-    density_axis.spines["top"].set_visible(False)
-    density_axis.spines["right"].set_visible(False)
+    density_axis.grid(alpha=0.25)
+    density_axis.legend(curve_handles, curve_labels, ncol=2, loc="upper right")
 
     row_positions = np.arange(ETA_GRID.size)[::-1]
     row_labels: list[str] = []
@@ -186,20 +165,14 @@ def make_figure(output_dir: Path) -> list[Path]:
             linewidth=0.9,
             zorder=5,
         )
-        model = "MV" if eta0 == 0.0 else "MVS"
-        row_labels.append(rf"{model}  $\eta_0={eta0:g}$")
+        row_labels.append(rf"$\eta_0={eta0:.2f}$")
 
-    interval_axis.set_title("B. Central 90% range and location", loc="left", pad=3.5, fontweight="bold")
     interval_axis.set_xlabel("Terminal DC wealth")
     interval_axis.set_yticks(row_positions)
     interval_axis.set_yticklabels(row_labels)
     interval_axis.set_ylim(-0.65, 3.65)
     interval_axis.set_xticks([0, 50, 100, 150, 200, 250])
-    interval_axis.grid(axis="x", color="#E4E7EC", linewidth=0.5)
-    interval_axis.spines["top"].set_visible(False)
-    interval_axis.spines["right"].set_visible(False)
-    interval_axis.spines["left"].set_visible(False)
-    interval_axis.tick_params(axis="y", length=0, pad=4)
+    interval_axis.grid(alpha=0.25)
 
     marker_handles = [
         Line2D([], [], color="#4D5968", marker="o", linestyle="none", markersize=4.0, label="Median"),
@@ -217,51 +190,16 @@ def make_figure(output_dir: Path) -> list[Path]:
     interval_axis.legend(
         handles=marker_handles,
         loc="lower right",
-        frameon=False,
+        frameon=True,
         ncol=2,
         handletextpad=0.35,
         columnspacing=0.8,
-        borderaxespad=0.2,
+        borderaxespad=0.4,
     )
-
-    figure.suptitle(
-        "Fixed-variance-aversion MVS shifts and spreads retirement wealth",
-        x=0.5,
-        y=0.97,
-        fontsize=9.0,
-        fontweight="bold",
-    )
-    figure.text(
-        0.5,
-        0.88,
-        r"dTCMV--MVS policies with $\gamma_0=2.5$; colors match the corresponding glidepaths",
-        ha="center",
-        va="center",
-        fontsize=6.6,
-        color="#4D5968",
-    )
-    figure.legend(
-        curve_handles,
-        curve_labels,
-        loc="upper center",
-        bbox_to_anchor=(0.5, 0.835),
-        ncol=4,
-        frameon=False,
-        handlelength=2.3,
-        columnspacing=1.2,
-    )
-    figure.text(
-        0.5,
-        0.04,
-        "Density: weighted Gaussian KDE with Silverman bandwidth and a state-grid resolution floor. Bars show q05--q95.",
-        ha="center",
-        va="center",
-        fontsize=5.3,
-        color="#66707D",
-    )
+    figure.subplots_adjust(left=0.11, right=0.98, bottom=0.13, top=0.98, hspace=0.08)
 
     outputs = [output_dir / f"{STEM}.png", output_dir / f"{STEM}.svg"]
-    figure.savefig(outputs[0], dpi=600, facecolor="white")
+    figure.savefig(outputs[0], dpi=PNG_DPI, facecolor="white")
     figure.savefig(outputs[1], facecolor="white")
     plt.close(figure)
 
@@ -271,6 +209,15 @@ def make_figure(output_dir: Path) -> list[Path]:
 
     print("Validated fixed-gamma statistics against:", SUMMARY)
     print("KDE bandwidths:", ", ".join(f"{value:.3f}" for value in bandwidths))
+    for eta0, result in zip(ETA_GRID, results):
+        wealth_grid = np.asarray(result["x_grid"], dtype=float) + result["cfg"].D
+        terminal_mass = np.asarray(result["pmf"][-1], dtype=float)
+        print(
+            f"eta0={eta0:g}: stored q05={result['stats']['q05']:.6f}, "
+            f"interpolated q05={weighted_quantile(wealth_grid, terminal_mass, 0.05):.6f}, "
+            f"interpolated q01={weighted_quantile(wealth_grid, terminal_mass, 0.01):.6f}, "
+            f"lower-tail mean={result['stats']['cvar05']:.6f}"
+        )
     for output in outputs:
         print(output)
     return outputs

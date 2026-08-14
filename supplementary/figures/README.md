@@ -117,6 +117,8 @@ PCMV、DOMVおよびcTCMVの厳密制約解では、確定的なDB給付を加�
 
 丸め前の値と機械可読版は [`dtcmv_mvs_fixed_gamma_distribution_table.csv`](../../results/dtcmv_mvs_fixed_gamma_distribution_table.csv) を参照してください。
 
+4ケースのq05が39.14で一致するのは、CDFが5%を超える最初の状態格子点を返す離散分位点のためです。全ケースが同じ格子区間37.66--39.14内で5%を通過します。線形補間q05は38.04、38.40、38.92、37.69と異なり、補間q01と下方5%平均は大きいMVS係数で悪化するため、q05の一致を下方リスク不変とは解釈しません。
+
 ### 5.2 共通平均較正後のグライドパス
 
 ![共通平均較正後のdTCMV--MVSグライドパス](./fig_dtcmv_mvs_equal_mean_glidepaths.png)
