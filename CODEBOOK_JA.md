@@ -26,6 +26,7 @@
 | ファイル | 役割 |
 | --- | --- |
 | `scripts/05_figures/localize_paper_figures_ja_20260717.py` | 付属NPZ/CSVから論文図を日本語で再生成 |
+| `scripts/05_figures/make_dtcmv_mvs_fixed_gamma_terminal_distribution.py` | Figure 6の固定係数グライドパスに対応する終端密度・分位区間を生成 |
 | `scripts/03_rolling/make_common_state_rolling_figure_20260713.py` | 共通状態ローリング比較図を生成 |
 
 ## 補助プロセス

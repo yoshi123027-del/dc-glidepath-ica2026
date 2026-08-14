@@ -104,6 +104,10 @@ PCMV、DOMVおよびcTCMVの厳密制約解では、確定的なDB給付を加�
 
 この4本のグライドパスが生成する終端退職資産分布は次のとおりです。
 
+![固定係数グライドパスに対応する終端分布](./fig_dtcmv_mvs_fixed_gamma_terminal_distribution.svg)
+
+密度曲線の色は上のグライドパスと対応しています。下段の横線はq05--q95、丸印はMedian、菱形はMeanです。図は [`make_dtcmv_mvs_fixed_gamma_terminal_distribution.py`](../../scripts/05_figures/make_dtcmv_mvs_fixed_gamma_terminal_distribution.py) で再生成できます。
+
 | Strategy | \(\eta_0\) | Mean | SD | Skewness | q05 | Median | q95 | Lower-tail mean (bottom 5%) | Upper-tail mean (top 5%) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | MV | 0.0 | 70.34 | 22.97 | 0.91 | 39.14 | 67.41 | 111.93 | 33.44 | 129.08 |

@@ -68,6 +68,7 @@ python scripts/04_sensitivity/numerical_diagnostics_20260718.py
 python validation/run_all_validations.py
 python scripts/01_solvers/dtcmv_mvs_solver_20260713.py
 python scripts/02_calibration/run_mvs_refined_calibration.py
+python scripts/05_figures/make_dtcmv_mvs_fixed_gamma_terminal_distribution.py
 ```
 
 番号は作業の大まかな流れを表します。全スクリプトの役割と実行区分は [scripts/README.md](scripts/README.md) および [CODEBOOK_JA.md](CODEBOOK_JA.md) を参照してください。
@@ -89,6 +90,10 @@ PCMVは固定ターゲット型の無制約解、DOMVは各時点再最適化型
 ## dTCMV--MVS固定係数グライドパスの終端分布
 
 補足図Figure 6の各グライドパスが生成する終端退職資産分布です。分散回避係数は `gamma0=2.5` に固定され、`eta0=0` がMV基準、正の `eta0` がMVSです。これは共通平均比較ではありません。
+
+![Figure 6の固定係数グライドパスに対応する終端分布](supplementary/figures/fig_dtcmv_mvs_fixed_gamma_terminal_distribution.svg)
+
+上段は終端資産の密度、下段はq05--q95区間とMedian（丸印）・Mean（菱形）です。色はFigure 6のグライドパスと対応しています。
 
 | Strategy | eta0 | Mean | SD | Skewness | q05 | Median | q95 | Lower-tail mean (bottom 5%) | Upper-tail mean (top 5%) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
