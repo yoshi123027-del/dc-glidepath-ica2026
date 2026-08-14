@@ -48,4 +48,5 @@
 | `results/xmax900_equal_mean_dtcmv_D0_N480.csv` | 広領域で共通平均へ再較正したdTCMVの要約 |
 | `results/rolling_quantile_detail_D0_N480.csv` | 残高分位点別ローリング結果 |
 | `results/dtcmv_mvs_arrays.npz` | dTCMV--MVSの方策・分布・グライドパス配列 |
+| `results/dtcmv_mvs_fixed_gamma_distribution_table.csv` | Figure 6の固定分散回避係数グライドパスに対応する終端分布表 |
 
