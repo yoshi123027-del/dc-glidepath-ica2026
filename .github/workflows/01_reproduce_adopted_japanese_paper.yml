@@ -267,11 +267,14 @@ jobs:
           ref=pd.read_csv('03_adopted_results/01_baseline_summary.csv')
           got=pd.read_csv('results/monthly_baseline_D0_summary.csv').copy()
           got['strategy']=got['strategy'].replace({'CP 60%':'CP'})
+          order=ref['strategy'].tolist()
+          refi=ref.set_index('strategy').reindex(order)
+          goti=got.set_index('strategy').reindex(order)
           cols=['mean','stdev','skewness','q05','q50','q95','cvar05','avg_glide','upper_bind']
           for c in cols:
-              a=ref.set_index('strategy')[c].sort_index().to_numpy(float)
-              b=got.set_index('strategy').loc[ref['strategy'].sort_values(),c].to_numpy(float) if False else got.set_index('strategy').reindex(ref['strategy'])[c].to_numpy(float)
-              if not np.allclose(a,b,rtol=0,atol=5e-4, equal_nan=True):
+              a=refi[c].to_numpy(float)
+              b=goti[c].to_numpy(float)
+              if not np.allclose(a,b,rtol=0,atol=5e-4,equal_nan=True):
                   raise SystemExit(f'baseline mismatch: {c}: {a} vs {b}')
           mref=pd.read_csv('03_adopted_results/02_mvs_fixed_gamma_summary.csv')
           mgot=pd.read_csv('results/dtcmv_mvs_fixed_gamma_summary.csv')
