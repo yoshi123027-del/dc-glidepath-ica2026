@@ -126,7 +126,7 @@ def unconstrained_dtcmv_theta(cfg, decision_times: np.ndarray) -> np.ndarray:
         )
         return np.array(
             [
-                -(cfg.r + cfg.beta * theta - cfg.sigma**2 * theta**2),
+                -(cfg.r + cfg.beta * theta + cfg.sigma**2 * theta**2),
                 -(cfg.sigma**2 * theta**2),
             ],
             dtype=float,

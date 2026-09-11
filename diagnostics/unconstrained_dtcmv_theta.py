@@ -2,8 +2,11 @@ from __future__ import annotations
 
 """Reproduce the unconstrained dTCMV coefficient theta_{rho_d}(t).
 
-The integral equation is the unconstrained wealth-dependent TCMV equation used
-in van Staden, Dang and Forsyth (2021), with the paper's baseline parameters.
+The integral equation follows Bjoerk, Murgoci and Zhou (2014), equation (13),
+and the first/second-moment derivation. The positive variance sign below
+corrects the inconsistent display in van Staden et al. (2021), equation (3.5).
+The historical coefficient rho is retained for this diagnostic only; see
+results/recalibration_v8 for the newly calibrated constrained policies.
 We convert the Volterra integral equation into an autonomous two-state ODE and
 integrate backward from T to 0.
 """
@@ -25,7 +28,7 @@ rho = 1.193359375
 A = beta**2 / sigma**2
 
 # Let
-# I1(t)=int_t^T [r+beta*theta(s)-sigma^2*theta(s)^2] ds,
+# I1(t)=int_t^T [r+beta*theta(s)+sigma^2*theta(s)^2] ds,
 # I2(t)=int_t^T sigma^2*theta(s)^2 ds.
 # The integral equation is
 # theta(t)=A/[rho*beta] * [exp(-I1(t)) + rho exp(-I2(t)) - rho].
@@ -34,7 +37,7 @@ def rhs(t: float, state: np.ndarray) -> np.ndarray:
     i1, i2 = state
     theta = A / (rho * beta) * (np.exp(-i1) + rho * np.exp(-i2) - rho)
     return np.array([
-        -(r + beta * theta - sigma**2 * theta**2),
+        -(r + beta * theta + sigma**2 * theta**2),
         -(sigma**2 * theta**2),
     ])
 
