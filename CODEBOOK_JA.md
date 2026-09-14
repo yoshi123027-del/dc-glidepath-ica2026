@@ -26,6 +26,7 @@
 | ファイル | 役割 |
 | --- | --- |
 | `scripts/05_figures/localize_paper_figures_ja_20260717.py` | 付属NPZ/CSVから論文図を日本語で再生成 |
+| `scripts/05_figures/make_dtcmv_mvs_fixed_gamma_terminal_distribution.py` | Figure 6の固定係数グライドパスに対応する終端密度・分位区間を生成 |
 | `scripts/03_rolling/make_common_state_rolling_figure_20260713.py` | 共通状態ローリング比較図を生成 |
 
 ## 補助プロセス
@@ -48,4 +49,5 @@
 | `results/xmax900_equal_mean_dtcmv_D0_N480.csv` | 広領域で共通平均へ再較正したdTCMVの要約 |
 | `results/rolling_quantile_detail_D0_N480.csv` | 残高分位点別ローリング結果 |
 | `results/dtcmv_mvs_arrays.npz` | dTCMV--MVSの方策・分布・グライドパス配列 |
+| `results/dtcmv_mvs_fixed_gamma_distribution_table.csv` | Figure 6の固定分散回避係数グライドパスに対応する終端分布表 |
 

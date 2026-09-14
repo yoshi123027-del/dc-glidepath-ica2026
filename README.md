@@ -79,6 +79,7 @@ python scripts/04_sensitivity/numerical_diagnostics_20260718.py
 python validation/run_all_validations.py
 python scripts/01_solvers/dtcmv_mvs_solver_20260713.py
 python scripts/02_calibration/run_mvs_refined_calibration.py
+python scripts/05_figures/make_dtcmv_mvs_fixed_gamma_terminal_distribution.py
 ```
 
 番号は作業の大まかな流れを表します。全スクリプトの役割と実行区分は [scripts/README.md](scripts/README.md) および [CODEBOOK_JA.md](CODEBOOK_JA.md) を参照してください。
@@ -96,6 +97,23 @@ python scripts/02_calibration/run_mvs_refined_calibration.py
 PCMVは固定ターゲット型の無制約解、DOMVは各時点再最適化型の無制約解、cTCMVは定数リスク回避型の解析解、dTCMVはVolterra方程式から得る時変係数を用いています。計算式と実装は [`add_all_clip_overlays_20260721.py`](scripts/04_sensitivity/add_all_clip_overlays_20260721.py)、全5図は [補足図ページ](supplementary/figures/README.md)、差分集計は [`all_strategies_strict_vs_clip_sensitivity_summary.csv`](results/sensitivity/all_strategies_strict_vs_clip_sensitivity_summary.csv) を参照してください。
 
 比較の結果、基準パラメータで差が小さい解概念があっても、パラメータ変更後に同様に近いとは限りません。特にPCMVおよびdTCMVでは、シナリオによって直接制約解とクリップ近似の差が大きくなります。
+
+## dTCMV--MVS固定係数グライドパスの終端分布
+
+補足図Figure 6の各グライドパスが生成する終端退職資産分布です。分散回避係数は `gamma0=2.5` に固定され、`eta0=0` がMV基準、正の `eta0` がMVSです。これは共通平均比較ではありません。
+
+![Figure 6の固定係数グライドパスに対応する終端分布](supplementary/figures/fig_dtcmv_mvs_fixed_gamma_terminal_distribution.svg)
+
+上段は終端資産の密度、下段はq05--q95区間とMedian（丸印）・Mean（菱形）です。色はFigure 6のグライドパスと対応しています。
+
+| Strategy | eta0 | Mean | SD | Skewness | q05 | Median | q95 | Lower-tail mean (bottom 5%) | Upper-tail mean (top 5%) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| MV | 0.0 | 70.34 | 22.97 | 0.91 | 39.14 | 67.41 | 111.93 | 33.44 | 129.08 |
+| MVS | 0.5 | 73.37 | 25.03 | 0.94 | 39.14 | 71.11 | 118.64 | 33.34 | 137.74 |
+| MVS | 1.0 | 84.28 | 33.71 | 1.05 | 39.14 | 78.71 | 146.90 | 32.74 | 172.95 |
+| MVS | 2.0 | 97.66 | 46.72 | 0.99 | 39.14 | 88.62 | 187.99 | 30.70 | 218.74 |
+
+`eta0`を高めると平均・中央値・上方裾が大きく上昇する一方、標準偏差も22.97から46.72へ拡大します。保存済みq05は、CDFが5%へ到達する最初の状態格子点を返すため、4ケースとも同じ格子区間37.66--39.14に入り、39.14と記録されています。格子間を線形補間したq05は順に38.04、38.40、38.92、37.69であり、実際には一致しません。さらに補間q01は29.29から24.98へ、下方5%平均は33.44から30.70へ低下します。したがって、係数の上昇は上方参加を強めますが、分散と極端な下方リスクを同時に悪化させ得ます。丸め前の集計値は [`dtcmv_mvs_fixed_gamma_distribution_table.csv`](results/dtcmv_mvs_fixed_gamma_distribution_table.csv) に収録しています。
 
 ## 最終稿で追加した診断
 
