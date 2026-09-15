@@ -3,7 +3,7 @@
 This module replaces the historical saved-policy comparison with freshly
 optimised finite-model policies. Target expected terminal wealth: **84.78**.
 See `../results/recalibration_v8` for parameters, policies and validation data,
-and `../paper/ICA2026_Japanese_revised_v8.pdf` for the updated Japanese paper.
+and `../archive/v8/paper/ICA2026_Japanese_revised_v8.pdf` for the updated Japanese paper.
 
 ## What is optimised
 
@@ -80,3 +80,5 @@ In particular, their equal-mean calibration and variance claims should not be
 substituted for the v8 data. The unconstrained dTCMV diagnostic's variance sign
 has been corrected separately; constrained equilibrium calculation here does
 not depend on an unconstrained clipped formula.
+
+The current Japanese manuscript is `../paper/v11/ICA2026_Japanese_revised_v11.pdf`. Its Appendix F reports these existing recalibration results. Coarse base results are preserved in `../archive/v8/base/`. No new optimisation was run for the v11 structural revision.

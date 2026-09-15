@@ -1,13 +1,7 @@
-name: Rebuild all strict-vs-clip sensitivity figures
+name: Rebuild archived v5 sensitivity figures (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/rebuild-all-clip-sensitivity.yml
-      - scripts/04_sensitivity/add_all_clip_overlays_20260721.py
-      - scripts/04_sensitivity/low_balance_refined_sensitivity_20260714.py
 
 permissions:
   contents: write
@@ -16,6 +10,9 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: archive/legacy_v5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
