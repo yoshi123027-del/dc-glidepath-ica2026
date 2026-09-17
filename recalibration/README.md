@@ -81,4 +81,8 @@ substituted for the v8 data. The unconstrained dTCMV diagnostic's variance sign
 has been corrected separately; constrained equilibrium calculation here does
 not depend on an unconstrained clipped formula.
 
-The current Japanese manuscript is `../paper/v11/ICA2026_Japanese_revised_v11.pdf`. Its Appendix F reports these existing recalibration results. Coarse base results are preserved in `../archive/v8/base/`. No new optimisation was run for the v11 structural revision.
+The historical Japanese v11 manuscript is retained at `../paper/v11/ICA2026_Japanese_revised_v11.pdf`. The latest is `../paper/v14_7/ICA2026_Japanese_revised_v14_7.pdf`; its main Table 5 reports the unchanged recalibration results and Appendix E.3 adds fixed-policy evaluator validation. Coarse base results are preserved in `../archive/v8/base/`. No new optimisation was run for the v11 structural revision.
+
+## Fixed-policy evaluator validation (v14_7)
+
+See [EVALUATOR_COMPARISON.md](EVALUATOR_COMPARISON.md) for the MGH forward vs independent million-path Euler-MC comparison. Only the evaluator changes; the saved policies, coefficients and calibration target are fixed. The comparison covers full terminal CDFs and distribution-weighted mean glide paths. It does not prove continuous-time exactness.

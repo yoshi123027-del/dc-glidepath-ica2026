@@ -1,14 +1,13 @@
 # ICA2026 DC運用論文・日本語版
 
-**最新版はv11（40ページ）です。** v5の内容・数値・図を基準に、本文の主張を絞り、理論導出・背景・MVS等をAppendixへ配置しました。原計算の誤りや精度上の制約は明示しています。
+**最新版はv14_7です。** v14_6の文章・主要数値を維持し、同一保存方策をMGH前進計算と独立100万経路Euler–Monte Carloに通した終端分布・平均グライドパスの検証をAppendix E.3へ追加しました。
 
-- [最新版PDF](paper/v11/ICA2026_Japanese_revised_v11.pdf)
-- [TeX・原図](paper/v11/) / [変更内容とレビュワー対応](paper/v11/REVISION_V11_JA.md)
-- [v9・39ページ保存版](archive/v9/paper/v9/ICA2026_Japanese_revised_v9.pdf)
+- [最新版PDF](paper/v14_7/ICA2026_Japanese_revised_v14_7.pdf)
+- [TeX・図](paper/v14_7/) / [変更記録](paper/v14_7/REVISION_V14_7_JA.md)
+- [評価器比較の定義・実行方法](recalibration/EVALUATOR_COMPARISON.md)
+- [従来v11](paper/v11/ICA2026_Japanese_revised_v11.pdf)も維持しています。
 
-**比較を主たる貢献、クリップ評価をその分析、三層運用を実務上の含意**として、要旨・序論・本文・結論を統一しました。新たな数値最適化・妥当性検証は行っていません。
-
-以前お渡しした[v10・42ページ稿](archive/v10/paper/ICA2026_Japanese_v5_restructured_v10_current.pdf)も保存しています。
+方策・係数・較正目標84.78は変更していません。MGHは離散確率質量伝播、MCは上端切詰めのない100万Euler経路です。両評価器に同じ方策を入力し、終端CDFと状態分布で加重した平均グライドパスを比較します。この検証は連続時間解の厳密性を証明するものではありません。
 
 ## 資料の入口
 
@@ -20,8 +19,8 @@
 | 再較正コードと条件 | [recalibration/README.md](recalibration/README.md) |
 | 不採用データ、探索計算、旧版 | [archive/README.md](archive/README.md) |
 | ファイルの役割 | [CODEBOOK_JA.md](CODEBOOK_JA.md) |
-| 現在のファイルハッシュ | [manifest_v11.json](manifest_v11.json) |
+| v11時点のファイルハッシュ | [manifest_v11.json](manifest_v11.json) |
 
-v5の151点格子の数値は原計算として保存しています。上端切詰めのない月次過程の精密な推定値とは区別してください。dTCMVの旧クリップは係数の符号訂正前の記録です。再較正した比較値はv11付録Fで確認できます。
+v5の151点格子の数値は原計算として保存しています。上端切詰めのない月次過程の精密な推定値とは区別してください。dTCMVの旧クリップは係数の符号訂正前の記録です。再較正した比較値は最新版の本文表5、評価器比較は付録E.3で確認できます。
 
 旧ファイルは削除せず分類して保存しています。[移動一覧](archive/inventory.csv)に旧パス・新パス・SHA-256を記録しました。コード利用時は論文と使用コミットを引用してください。ライセンスは[MIT](LICENSE)です。
