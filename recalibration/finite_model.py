@@ -18,6 +18,16 @@ def gh(n):
     return z*np.sqrt(2),w/np.sqrt(np.pi)
 
 @njit(cache=True)
+def interpolated_moments(M,Q,ix,wt,w):
+    """Shared MGH conditional-moment kernel, independent of model constraints."""
+    f=0.;q=0.
+    for k in range(len(w)):
+        j=ix[k];l=wt[k]
+        f+=w[k]*(M[j]+l*(M[j+1]-M[j]))
+        q+=w[k]*(Q[j]+l*(Q[j+1]-Q[j]))
+    return f,q
+
+@njit(cache=True)
 def mapping(nx,xmax,nc,N,z):
     dt=T/N;h=xmax/(nx-1)
     ix=np.empty((nx,nc,len(z)),np.int32);wt=np.empty((nx,nc,len(z)))
@@ -41,11 +51,7 @@ def solve(kind,param,ix,wt,w,h,N):
             gamma=param/(i*h+H) if kind==2 else param
             best=-1e300;ba=0.;bf=0.;bq=0.
             for a in range(nc):
-                f=0.;q=0.
-                for k in range(ng):
-                    j=ix[i,a,k];l=wt[i,a,k]
-                    f+=w[k]*(M[n+1,j]+l*(M[n+1,j+1]-M[n+1,j]))
-                    q+=w[k]*(Q[n+1,j]+l*(Q[n+1,j+1]-Q[n+1,j]))
+                f,q=interpolated_moments(M[n+1],Q[n+1],ix[i,a],wt[i,a],w)
                 score=-q if kind==0 else f-.5*gamma*(q-f*f)
                 if score>best:best=score;ba=a;bf=f;bq=q
             P[n,i]=ba/(nc-1)*i*h;M[n,i]=bf;Q[n,i]=bq

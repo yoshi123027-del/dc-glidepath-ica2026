@@ -1,13 +1,13 @@
 # ICA2026 DC運用論文・日本語版
 
-**最新版はv14_7です。** v14_6の文章・主要数値を維持し、同一保存方策をMGH前進計算と独立100万経路Euler–Monte Carloに通した終端分布・平均グライドパスの検証をAppendix E.3へ追加しました。
+**本検証の最新版はv8です。** 指定されたv14_7を正本とし、Appendix F.5をMGH後退・前進による外部ベンチマーク検証へ更新しました。版名v8は今回の指定に従います。
 
-- [最新版PDF](paper/v14_7/ICA2026_Japanese_revised_v14_7.pdf)
-- [TeX・図](paper/v14_7/) / [変更記録](paper/v14_7/REVISION_V14_7_JA.md)
-- [評価器比較の定義・実行方法](recalibration/EVALUATOR_COMPARISON.md)
-- [従来v11](paper/v11/ICA2026_Japanese_revised_v11.pdf)も維持しています。
+- [v8 PDF](paper/v8/ICA2026_Japanese_revised_v8.pdf) / [TeX・図](paper/v8/)
+- [外部ベンチマークの仕様・実行方法](recalibration/external_vanstaden_2021/README.md)
+- [全比較・収束・境界診断データ](results/validation/van_staden_2021/)
+- [v14_7](paper/v14_7/) / [評価器比較の定義・実行方法](recalibration/EVALUATOR_COMPARISON.md)
 
-方策・係数・較正目標84.78は変更していません。MGHは離散確率質量伝播、MCは上端切詰めのない100万Euler経路です。両評価器に同じ方策を入力し、終端CDFと状態分布で加重した平均グライドパスを比較します。この検証は連続時間解の厳密性を証明するものではありません。
+DC保存方策・係数・較正目標84.78・本文主要数値・Appendix Eは維持しています。検証を①同じ有限モデル内の後退・前進整合性、②同一方策のMGH対独立100万Euler経路、③外部問題へのMGH適用、の三層に区別します。第三層は閉形式からの表の再計算だけではありません。ただしdTCMVは原論文の掲載式と均衡導出の不整合および残差があり、完全再現とはしていません。いずれも連続時間最適性の証明ではありません。
 
 ## 資料の入口
 

@@ -24,3 +24,10 @@
 | `results/recalibration_v8/fine/evaluator_*` | 分布・グライドパスの比較値、監査、再現性記録 |
 
 詳細は [評価器比較の実行方法](recalibration/EVALUATOR_COMPARISON.md) を参照してください。
+
+
+## 外部MGHベンチマーク（v14_7からv8）
+
+`recalibration/external_vanstaden_2021/`に一次資料の仕様書、共通MGH核を使う後退・前進コード、独立理論参照、監査・報告コードを収録しました。`results/validation/van_staden_2021/`に全72設定の結果を保存しています。方策別ZIPには全NPZ・設定JSON・方策CSVが入り、展開後そのまま報告コードを実行できます。集計CSV、CDFデータ、図、環境・ソースハッシュもあります。
+
+これは公表表から分布を逆算する旧検証と異なります。dTCMVは目的関数から独立計算していますが、掲載式との不整合が未解決のため部分的外部検証です。本文DC結果、既存の保存方策・再較正値、付録Eの評価器比較を変更していません。
