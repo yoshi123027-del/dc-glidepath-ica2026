@@ -1,7 +1,6 @@
 # van Staden–Dang–Forsyth (2021): benchmark specification
 
-Frozen before production solver implementation, 2026-09-17. Base code commit:
-`db548f7b3904a1961bba2e6892f0a83ae7e94011`; manuscript v14_7, next manuscript v8.
+This document fixes the external benchmark's inputs, numerical architecture, and reporting conventions.
 Primary source: journal version, SIAM J. Financial Mathematics 12(2), 566–603,
 DOI https://doi.org/10.1137/20M1338241 . Author-hosted journal PDF:
 https://cs.uwaterloo.ca/~paforsyt/Distributions_2021.pdf .

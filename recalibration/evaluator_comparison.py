@@ -1,5 +1,8 @@
-"""Fixed saved-policy evaluator comparison; never optimises or calibrates.
-Run from repo root: python recalibration/evaluator_comparison.py [--rerun-mc]
+"""Compare fixed saved policies; never optimises or recalibrates.
+
+Read policy and Monte Carlo inputs from ``results/current`` and write the
+evaluator comparison under ``results/validation/evaluator_comparison`` by
+default.
 """
 import argparse,csv,hashlib,json,platform
 from pathlib import Path
@@ -65,14 +68,21 @@ def writecsv(path,rows):
         w=csv.DictWriter(f,fieldnames=rows[0]);w.writeheader();w.writerows(rows)
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--directory',default='results/recalibration_v8/fine');ap.add_argument('--rerun-mc',action='store_true');a=ap.parse_args();out=Path(a.directory)
-    cfg=json.loads((out/'config.json').read_text());assert (cfg['nx'],cfg['xmax'],cfg['N'],cfg['ng'])==(6001,600.,480,7)
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--data-dir',default='results/current')
+    ap.add_argument('--out',default='results/validation/evaluator_comparison')
+    ap.add_argument('--rerun-mc',action='store_true')
+    a=ap.parse_args()
+    data=Path(a.data_dir)
+    out=Path(a.out)
+    out.mkdir(parents=True,exist_ok=True)
+    cfg=json.loads((data/'config.json').read_text());assert (cfg['nx'],cfg['xmax'],cfg['N'],cfg['ng'])==(6001,600.,480,7)
     h=cfg['xmax']/(cfg['nx']-1);grid=np.arange(cfg['nx'])*h;z,w=np.polynomial.hermite.hermgauss(cfg['ng']);z=z*np.sqrt(2);w=w/np.sqrt(np.pi)
-    inputs={p.name:sha(p) for p in [out/(n+ext) for n in NAMES for ext in ['.npz','.json']]+[out/'config.json',out/'independent_mc.npz',out/'independent_mc.csv']}
-    saved=np.load(out/'independent_mc.npz');assert list(saved['names'])==NAMES
+    inputs={p.name:sha(p) for p in [data/(n+ext) for n in NAMES for ext in ['.npz','.json']]+[data/'config.json',data/'independent_mc.npz',data/'independent_mc.csv']}
+    saved=np.load(data/'independent_mc.npz');assert list(saved['names'])==NAMES
     X=saved['terminal'];G=saved['glide'];seed=int(saved['seed']);assert X.shape==(5,1000000) and seed==20260912
-    policies=[np.load(out/(n+'.npz'))['policy'] for n in NAMES]
-    validation=dict(seed=seed,paths=1000000,blocks=100,mc_source='independent_mc.npz',mc_regenerated=a.rerun_mc,initial_state=x0,initial_transition='exact initial state; risky dollars interpolation',mgh_h=h,mgh_ng=7,mc_upper_cap=False,policy_sha256=inputs,strategies={})
+    policies=[np.load(data/(n+'.npz'))['policy'] for n in NAMES]
+    validation=dict(seed=seed,paths=1000000,blocks=100,mc_source=str(data/'independent_mc.npz'),mc_regenerated=a.rerun_mc,initial_state=x0,initial_transition='exact initial state; risky dollars interpolation',mgh_h=h,mgh_ng=7,mc_upper_cap=False,policy_sha256=inputs,strategies={})
     if a.rerun_mc:
         from validate import mc
         xx,gg,hit,neg=mc(np.stack(policies),h,1000000,seed)
@@ -80,7 +90,7 @@ def main():
         assert np.allclose(xx,X,rtol=0,atol=1e-7)
         assert np.allclose(gg.mean(axis=0),G,rtol=0,atol=1e-11)
         validation.update(mc_terminal_bitwise_reproduced=bool(np.array_equal(xx,X)),mc_terminal_max_reproduction_error=float(abs(xx-X).max()),mc_glide_max_reproduction_error=float(abs(gg.mean(axis=0)-G).max()),mc_cap_path_counts=hit.sum(axis=0).tolist(),mc_negative_step_counts=neg.sum(axis=0).tolist())
-    old=list(csv.DictReader((out/'independent_mc.csv').open()));dis=[];comp=[];gl=[];series=[];massall=[];auditrows=[]
+    old=list(csv.DictReader((data/'independent_mc.csv').open()));dis=[];comp=[];gl=[];series=[];massall=[];auditrows=[]
     for j,(name,P) in enumerate(zip(NAMES,policies)):
         assert P.shape==(480,6001)
         masses,g,au=forward(P,h,z,w);massall.append(masses);p=masses[-1];s=stats(grid,p);t=stats(X[j]);diff=g-G[j]
@@ -94,7 +104,7 @@ def main():
         assert abs(au[:,5]).max()<1e-7
         assert abs(masses[1:]@grid-au[:,2]).max()<1e-9
         if name=='CP':
-            theta=float(np.load(out/'CP.npz')['parameter']);assert abs(g-theta).max()<1e-10 and abs(G[j]-theta).max()<1e-10
+            theta=float(np.load(data/'CP.npz')['parameter']);assert abs(g-theta).max()<1e-10 and abs(G[j]-theta).max()<1e-10
             validation['cp_theta']=theta;validation['cp_max_deviation_mgh']=float(abs(g-theta).max());validation['cp_max_deviation_mc']=float(abs(G[j]-theta).max())
         validation['strategies'][name]=dict(max_mass_error=float(abs(masses[1:].sum(axis=1)-1).max()),min_mass=float(masses.min()),max_lower_mass=float(masses[1:,0].max()),max_upper_mass=float(masses[1:,-1].max()),expected_upper_crossings=float(au[:,0].sum()),expected_lower_crossings=float(au[:,1].sum()),backward_mean=mean,backward_sd=sd,max_local_second_moment_error=float(abs(au[:,5]).max()))
         for n in range(480):
@@ -106,7 +116,7 @@ def main():
     tmp=Path(tempfile.mktemp(suffix='.npz'))
     np.savez_compressed(tmp,names=NAMES,grid=grid,mgh_terminal_mass=np.array(massall)[:,-1,:],mgh_glide=np.array([np.array([v['mgh'] for v in series if v['strategy']==n]) for n in NAMES]),mc_glide=G,mc_source='independent_mc.npz',seed=seed,initial_wealth=x0)
     shutil.copyfile(tmp,out/'evaluator_comparison.npz');tmp.unlink()
-    for filename,digest in inputs.items():assert sha(out/filename)==digest
+    for filename,digest in inputs.items():assert sha(data/filename)==digest
     validation['environment']=dict(python=platform.python_version(),numpy=np.__version__)
     (out/'evaluator_validation.json').write_text(json.dumps(validation,indent=2)+'\n')
 if __name__=='__main__':main()

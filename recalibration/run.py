@@ -34,7 +34,7 @@ def calibrate(fn,lo,hi,increasing=True,tol=.002,maxit=18):
     return best[0],best[1],history
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('task',choices=['tc','family','dom','pc','cp']);ap.add_argument('--nx',type=int,default=3001);ap.add_argument('--nc',type=int,default=65);ap.add_argument('--ng',type=int,default=5);ap.add_argument('--xmax',type=float,default=600);ap.add_argument('--step',type=float,default=2);ap.add_argument('--out',default='results_v8/base');ap.add_argument('--eval-h',type=float,default=.025);ap.add_argument('--eval-ng',type=int,default=31);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('task',choices=['tc','family','dom','pc','cp']);ap.add_argument('--nx',type=int,default=3001);ap.add_argument('--nc',type=int,default=65);ap.add_argument('--ng',type=int,default=5);ap.add_argument('--xmax',type=float,default=600);ap.add_argument('--step',type=float,default=2);ap.add_argument('--out',default='results/current');ap.add_argument('--eval-h',type=float,default=.025);ap.add_argument('--eval-ng',type=int,default=31);a=ap.parse_args()
     out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
     model=fm.Model(nx=a.nx,nc=a.nc,ng=a.ng,xmax=a.xmax,eval_h=a.eval_h,eval_ng=a.eval_ng)
     (out/'config.json').write_text(json.dumps(model.cfg,indent=2))

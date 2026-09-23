@@ -1,6 +1,6 @@
 # 同一保存方策のMGH・独立MC評価器比較
 
-正本はICA2026_Japanese_revised_v14_6.tex、次版はv14_7です。GitHubのmain（開始時c058ac7）にはv11原稿が残っていましたが、現行の再較正方策・独立MCデータはv14_6の出典と一致しました。
+本資料は、現在の論文で用いる5方策を固定したまま、MGH前進評価と独立Euler–Monte Carlo評価の差を要約したものです。
 
 ## 結果
 
@@ -30,28 +30,27 @@
 - 平均グライドパス差はdTCMVが最大（34.75年、0.5889 pp）。同じ方策を異なる状態分布で加重した差であり、最適方策の変更ではありません。
 - dTCMVはSD差・q95差も最大ですが、最大CDF差は5方策中最小。グライドパス差とCDF差の単純な対応や因果関係は主張できません。
 - CPは平均グライドパスが一致しても終端分布に差が残るため、質量配分等の評価器差を確認する基準になります。
-- 現行CPのSDはMGH 31.7442、MC 31.6874（相対差約0.18%）。旧粗格子の37.927対31.749、約19.5%と同程度の乖離は観測されません。ただし旧方策とは較正条件が異なるので、同一方策の改善率とは解釈しません。
+- CPのSDはMGH 31.7442、MC 31.6874（相対差約0.18%）です。
 - 本文のMC主要値・主な分布形状・意思決定原理に基づく設計上の結論を変更する結果ではありません。連続時間の厳密解・大域最適性・一様誤差限界の証明でもありません。
 
 ## 初期化と数値監査
 
-初期残高1/12は論文Appendix Bの定義に従い正確に使用し、最初の遷移後に質量を格子へ配分しました。旧checks.pyの「最初に二点へ初期質量を分割する」方式とは区別します。これを隠して旧監査値と同一だとは扱っていません。
+初期残高1/12は論文Appendix Bの定義に従い正確に使用し、最初の遷移後に質量を格子へ配分しました。`checks.py` の二点への初期質量配分とは異なる初期化を明示的に区別しています。
 
 全月の質量総和誤差は2.2e-14未満、負の質量・下端質量はゼロ。最大上端質量はCP 6.43e-8、dTCMV 3.16e-9。前進・後退の平均と二次モーメント、および各月の質量配分による追加分散を検算しました。MCには上端超過経路・負残高ステップはありませんでした。
 
 MGHの下位5%平均は境界格子点の質量を按分し、確率を正確に5%としています。最大CDF差は両支持域全体の左右極限で計算し、図の表示範囲で打ち切っていません。原子を含むCDFと裾按分について独立の小例テストも実施しました。
 
-## 論文の変更範囲
-
-内容上の変更は、第5章の参照1文、本文平均グライドパス図のキャプション、Appendix E.3に限定しました。組版ではE.4・E.6.3の改ページと旧監査表2点の配置指定のみを調整しました。既存表全体、既存の番号付き数式、参考文献、ラベルは維持しています。Appendix E.6の旧CP結果もそのままです。
-
 ## 再現
 
 ```bash
 python -m pip install -r requirements.txt
-python recalibration/test_evaluator_comparison.py
-python recalibration/evaluator_comparison.py --rerun-mc
-python recalibration/plot_evaluator_comparison.py
+python recalibration/evaluator_comparison.py \
+  --data-dir results/current \
+  --out results/validation/evaluator_comparison
+python recalibration/plot_evaluator_comparison.py \
+  --data-dir results/current \
+  --validation-dir results/validation/evaluator_comparison
 ```
 
 詳細な入力対応、初期化、統計量定義、出力一覧は `recalibration/EVALUATOR_COMPARISON.md` に記録しています。
